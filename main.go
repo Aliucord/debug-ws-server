@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"fmt"
 	"log"
@@ -9,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/c-bata/go-prompt"
 	"nhooyr.io/websocket"
 	"nhooyr.io/websocket/wsjson"
 )
@@ -56,20 +56,23 @@ func main() {
 	})
 
 	go func() {
-		scanner := bufio.NewScanner(os.Stdin)
-		for {
-			if conn != nil {
-				scanner.Scan()
-				code := scanner.Text()
-
-				ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-
-				if err := conn.Write(ctx, websocket.MessageText, []byte(code)); err != nil {
-					log.Println(err)
-				}
-				cancel()
+		p := prompt.New(func(input string) {
+			if conn == nil {
+				println("No Client")
+				return
 			}
-		}
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+			if err := conn.Write(ctx, websocket.MessageText, []byte(input)); err != nil {
+				log.Println(err)
+			}
+
+			cancel()
+		}, func(input prompt.Document) []prompt.Suggest {
+			return []prompt.Suggest{}
+		}, prompt.OptionPrefix(">>> "), prompt.OptionTitle("DebugWS"))
+
+		defer os.Exit(0)
+		p.Run()
 	}()
 
 	if err := http.ListenAndServe(":9090", nil); err != nil {
