@@ -1,0 +1,25 @@
+{
+  "name": "debug-ws-server",
+  "version": "1.0.0",
+  "description": "A debug webserver for AliucordRN",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aliucord/debug-ws-server.git"
+  },
+  "author": "TymanWasTaken",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Aliucord/debug-ws-server/issues"
+  },
+  "homepage": "https://github.com/Aliucord/debug-ws-server#readme",
+  "packageManager": "pnpm@7.0.1",
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "ws": "^8.6.0"
+  },
+  "type": "module"
+}
